@@ -7,3 +7,6 @@ export.cfg
 
 # Imported translations (automatically generated from CSV files)
 *.translation
+
+#Jetbrains
+.idea
