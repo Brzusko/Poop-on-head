@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bl75yegtyha78"]
+
+[ext_resource type="Script" path="res://addons/multi_client/scripts/number_line_edit.gd" id="1_xmel8"]
+
+[node name="NumberLineEdit" type="LineEdit"]
+script = ExtResource("1_xmel8")
