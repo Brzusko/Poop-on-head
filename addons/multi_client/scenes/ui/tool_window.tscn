@@ -1,0 +1,46 @@
+[gd_scene load_steps=4 format=3 uid="uid://c5fnuuvbcns1b"]
+
+[ext_resource type="PackedScene" uid="uid://bl75yegtyha78" path="res://addons/multi_client/scenes/ui/components/number_line_edit.tscn" id="1_dvbsx"]
+[ext_resource type="Script" path="res://addons/multi_client/scripts/multi_client_tool.gd" id="1_gpg35"]
+[ext_resource type="Script" path="res://addons/multi_client/scripts/multi_client_tool_settings.gd" id="2_2r455"]
+
+[node name="ToolWindow" type="VBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -39.0
+offset_bottom = 2.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_gpg35")
+
+[node name="ContentContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="CMDContainer" type="VBoxContainer" parent="ContentContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="ContentContainer/CMDContainer"]
+layout_mode = 2
+text = "Command Line Arguments"
+
+[node name="LineEdit" type="LineEdit" parent="ContentContainer/CMDContainer"]
+layout_mode = 2
+
+[node name="ClientsCount" type="VBoxContainer" parent="ContentContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="ContentContainer/ClientsCount"]
+layout_mode = 2
+text = "Clients Count"
+
+[node name="ClientsNumForm" parent="ContentContainer/ClientsCount" instance=ExtResource("1_dvbsx")]
+layout_mode = 2
+
+[node name="ConnectButton" type="Button" parent="ContentContainer"]
+layout_mode = 2
+text = "Create Clients"
+
+[node name="ToolSettings" type="Node" parent="."]
+script = ExtResource("2_2r455")
