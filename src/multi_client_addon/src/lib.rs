@@ -1,0 +1,1 @@
+use godot::prelude::*;pub mod multi_client_plugin;struct MultiClientAddon;#[gdextension]unsafe impl ExtensionLibrary for MultiClientAddon {}
