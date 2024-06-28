@@ -1,3 +1,4 @@
+use std::num::ParseIntError;
 use godot::prelude::*;
 use godot::classes::{VBoxContainer, IVBoxContainer, CheckBox, LineEdit, Button};
 use godot::global::Error;
@@ -46,32 +47,6 @@ impl IVBoxContainer for MainToolWindow
     }
 }
 
-impl MainToolWindow
-{
-    pub fn assign_data(&mut self, data: MultiClientData)
-    {
-        if !self.cmd_line.is_none()
-        {
-
-        }
-
-        if !self.clients_line.is_none()
-        {
-
-        }
-
-        if !self.run_from_main_checkbox.is_none()
-        {
-
-        }
-    }
-
-    pub fn retrieve_data() -> MultiClientData
-    {
-        MultiClientData::default()
-    }
-}
-
 #[godot_api]
 impl MainToolWindow
 {
@@ -79,5 +54,56 @@ impl MainToolWindow
     pub fn connect_button_pressed(&mut self)
     {
         godot_print!("Connect");
+    }
+}
+
+impl MainToolWindow
+{
+    pub fn assign_data(&mut self, data: &MultiClientData)
+    {
+        if let Some(mut cmd_line) = self.cmd_line.as_mut()
+        {
+            let text: GString = data.cmd_line_text();
+            cmd_line.set_text(text);
+        }
+
+        if let Some(mut clients_count_line_edit) = self.clients_line.as_mut()
+        {
+            let clients_count: i64 = data.clients_count;
+            clients_count_line_edit.set_text(GString::from(clients_count.to_string()));
+        }
+
+        if let Some(mut run_from_main_checkbox) = self.run_from_main_checkbox.as_mut()
+        {
+            let run_from_main: bool = data.run_from_main;
+            run_from_main_checkbox.set_pressed(run_from_main);
+        }
+    }
+
+    pub fn retrieve_data(&mut self) -> MultiClientData
+    {
+        let mut data = MultiClientData::default();
+
+        if let Some(mut cmd_line) = self.cmd_line.as_mut()
+        {
+            data.assign_cmd_line_text(cmd_line.get_text())
+        }
+
+        if let Some(mut clients_count_line_edit) = self.clients_line.as_mut()
+        {
+            let clients: Result<i64, ParseIntError> = String::from(clients_count_line_edit.get_text().to_string()).parse();
+
+            if let Ok(parsed_clients) = clients
+            {
+                data.clients_count = parsed_clients;
+            }
+        }
+
+        if let Some(mut run_from_main_checkbox) = self.run_from_main_checkbox.as_mut()
+        {
+            data.run_from_main = run_from_main_checkbox.is_pressed();
+        }
+
+        data
     }
 }

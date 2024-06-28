@@ -57,9 +57,9 @@ impl MultiClientDataSaver {
 
 #[derive(Serialize, Deserialize)]
 pub struct MultiClientData {
-    clients_count: i64,
+    pub clients_count: i64,
     cmd_line: String,
-    run_from_main: bool,
+    pub run_from_main: bool,
 }
 
 impl MultiClientData
@@ -72,5 +72,15 @@ impl MultiClientData
             cmd_line: String::from(""),
             run_from_main: false
         }
+    }
+
+    pub fn cmd_line_text(&self) -> GString
+    {
+        GString::from(self.cmd_line.to_string())
+    }
+
+    pub fn assign_cmd_line_text(&mut self, text: GString)
+    {
+        self.cmd_line = text.to_string();
     }
 }
