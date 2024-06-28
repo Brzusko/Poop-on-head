@@ -1,6 +1,10 @@
 [gd_scene format=3 uid="uid://c5fnuuvbcns1b"]
 
-[node name="ToolWindow" type="VBoxContainer"]
+[node name="ToolWindow" type="MainToolWindow" node_paths=PackedStringArray("cmd_line", "clients_line", "run_from_main_checkbox", "run_game_button")]
+cmd_line = NodePath("ContentContainer/CMDContainer/LineEdit")
+clients_line = NodePath("ContentContainer/ClientsCount/NumericLineEdit")
+run_from_main_checkbox = NodePath("ContentContainer/RunFromMain/CheckBox")
+run_game_button = NodePath("ContentContainer/ConnectButton")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -32,6 +36,17 @@ text = "Clients Count"
 
 [node name="NumericLineEdit" type="NumericLineEdit" parent="ContentContainer/ClientsCount"]
 layout_mode = 2
+
+[node name="RunFromMain" type="VBoxContainer" parent="ContentContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="ContentContainer/RunFromMain"]
+layout_mode = 2
+text = "Run From Main"
+
+[node name="CheckBox" type="CheckBox" parent="ContentContainer/RunFromMain"]
+layout_mode = 2
+size_flags_vertical = 3
 
 [node name="ConnectButton" type="Button" parent="ContentContainer"]
 layout_mode = 2

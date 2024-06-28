@@ -1,1 +1,1 @@
-use godot::prelude::*;mod multi_client_plugin;mod numeric_line_edit;mod multi_client_data;struct MultiClientAddon;#[gdextension]unsafe impl ExtensionLibrary for MultiClientAddon {}
+use godot::prelude::*;mod multi_client_plugin;mod numeric_line_edit;mod multi_client_data;mod main_tool_window;struct MultiClientAddon;#[gdextension]unsafe impl ExtensionLibrary for MultiClientAddon {}
