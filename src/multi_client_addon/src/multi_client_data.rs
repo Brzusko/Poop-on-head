@@ -1,5 +1,5 @@
-
-use godot::classes::{FileAccess, DirAccess, file_access};
+use std::fs::File;
+use godot::classes::{FileAccess, DirAccess, file_access, Json};
 use godot::builtin::GString;
 use godot::global::Error;
 use godot::prelude::{Gd, godot_error};
@@ -26,22 +26,53 @@ impl MultiClientDataSaver {
         let mut unwrapped_file: Gd<FileAccess> = file.unwrap();
 
         unwrapped_file.store_string(GString::from(serialized_data));
+        unwrapped_file.close();
     }
 
     pub fn load_data() -> Option<MultiClientData>
     {
-        Self::create_structure_if_missing();
-        None
+        if !Self::create_structure_if_missing()
+        {
+            return None;
+        }
+
+        let file: Option<Gd<FileAccess>> = FileAccess::open(GString::from(SETTINGS_FILE_FULL_PATH), file_access::ModeFlags::READ);
+
+        if file.is_none()
+        {
+            let error: Error = FileAccess::get_open_error();
+            godot_error!("Could not open settings file, error: {:?}", error);
+
+            return None;
+        }
+
+        let unwrapped_file: Gd<FileAccess> = file.unwrap();
+        let file_content = unwrapped_file.get_as_text();
+
+        if file_content.is_empty()
+        {
+            return None;
+        }
+
+        let result = serde_json::from_str::<MultiClientData>(file_content.to_string().as_str());
+
+        match result {
+            Ok(data) => { Some(data) }
+            Err(error) => {
+                godot_error!("Settings parsing error: {:?}", error);
+                None
+            }
+        }
     }
 
-    fn create_structure_if_missing() -> Option<MultiClientData> {
+    fn create_structure_if_missing() -> bool {
         if !DirAccess::dir_exists_absolute(GString::from(SETTINGS_DIRECTORY_PATH)) {
             let error: Error = DirAccess::make_dir_absolute(GString::from(SETTINGS_DIRECTORY_PATH));
 
             if error != Error::OK
             {
                 godot_error!("Could not create setting dir {:?} at path {:?}", error, SETTINGS_DIRECTORY_PATH);
-                return None;
+                return false;
             }
         }
 
@@ -49,9 +80,10 @@ impl MultiClientDataSaver {
         {
             let default_data: MultiClientData = MultiClientData::default();
             Self::save_data(&default_data);
-            return Some(default_data);
+            return true;
         }
-            None
+
+        true
     }
 }
 

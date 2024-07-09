@@ -2,7 +2,7 @@ use std::num::ParseIntError;
 use godot::prelude::*;
 use godot::classes::{VBoxContainer, IVBoxContainer, CheckBox, LineEdit, Button};
 use godot::global::Error;
-use crate::multi_client_data::MultiClientData;
+use crate::multi_client_data::{MultiClientData, MultiClientDataSaver};
 
 #[derive(GodotClass)]
 #[class(base=VBoxContainer)]
@@ -16,7 +16,7 @@ struct MainToolWindow
     #[export]
     run_from_main_checkbox: Option<Gd<CheckBox>>,
     #[export]
-    run_game_button: Option<Gd<Button>>
+    run_game_button: Option<Gd<Button>>,
 }
 
 #[godot_api]
@@ -44,6 +44,20 @@ impl IVBoxContainer for MainToolWindow
                 godot_print!("Could not connect signal to button, error: {:?}", error);
             }
         }
+
+        let save_data: Option<MultiClientData> = MultiClientDataSaver::load_data();
+
+        if save_data.is_none()
+        {
+            return;
+        }
+
+        self.assign_data(&save_data.unwrap());
+    }
+
+    fn exit_tree(&mut self) {
+        let save_data: MultiClientData = self.retrieve_data();
+        MultiClientDataSaver::save_data(&save_data);
     }
 }
 
