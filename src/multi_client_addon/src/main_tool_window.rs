@@ -3,6 +3,7 @@ use godot::prelude::*;
 use godot::classes::{VBoxContainer, IVBoxContainer, CheckBox, LineEdit, Button};
 use godot::global::Error;
 use crate::multi_client_data::{MultiClientData, MultiClientDataSaver};
+use crate::client_runner::{ClientRunner};
 
 #[derive(GodotClass)]
 #[class(base=VBoxContainer)]
@@ -17,6 +18,8 @@ struct MainToolWindow
     run_from_main_checkbox: Option<Gd<CheckBox>>,
     #[export]
     run_game_button: Option<Gd<Button>>,
+
+    client_runner: ClientRunner,
 }
 
 #[godot_api]
@@ -29,6 +32,7 @@ impl IVBoxContainer for MainToolWindow
             clients_line: None,
             run_from_main_checkbox: None,
             run_game_button: None,
+            client_runner: ClientRunner::new()
         }
     }
 
@@ -67,7 +71,7 @@ impl MainToolWindow
     #[func]
     pub fn connect_button_pressed(&mut self)
     {
-        godot_print!("Connect");
+        self.client_runner.run_process();
     }
 }
 
