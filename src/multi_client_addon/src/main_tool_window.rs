@@ -7,8 +7,8 @@ use crate::client_runner::{ClientRunner};
 use crate::numeric_line_edit::{NumericLineEdit};
 
 #[derive(GodotClass)]
-#[class(base=VBoxContainer)]
-struct MainToolWindow
+#[class(tool, base=VBoxContainer)]
+pub struct MainToolWindow
 {
     base: Base<VBoxContainer>,
     #[export]
@@ -47,6 +47,7 @@ impl IVBoxContainer for MainToolWindow
     }
 
     fn ready(&mut self) {
+        godot_print!("Kuytwa");
         if !self.run_game_button.is_none()
         {
             let callable: Callable = self.base_mut().callable(StringName::from("connect_button_pressed"));
