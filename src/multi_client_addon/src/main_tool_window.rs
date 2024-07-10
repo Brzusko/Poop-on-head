@@ -19,6 +19,8 @@ struct MainToolWindow
     run_from_main_checkbox: Option<Gd<CheckBox>>,
     #[export]
     run_game_button: Option<Gd<Button>>,
+    #[export]
+    destroy_all_button: Option<Gd<Button>>,
 
     client_runner: ClientRunner,
 }
@@ -33,8 +35,15 @@ impl IVBoxContainer for MainToolWindow
             clients_line: None,
             run_from_main_checkbox: None,
             run_game_button: None,
+            destroy_all_button: None,
             client_runner: ClientRunner::new()
         }
+    }
+
+    fn exit_tree(&mut self) {
+        let save_data: MultiClientData = self.retrieve_data();
+        MultiClientDataSaver::save_data(&save_data);
+        self.client_runner.kill_all_process_collection();
     }
 
     fn ready(&mut self) {
@@ -42,6 +51,17 @@ impl IVBoxContainer for MainToolWindow
         {
             let callable: Callable = self.base_mut().callable(StringName::from("connect_button_pressed"));
             let btn: &mut Gd<Button> = self.run_game_button.as_mut().unwrap();
+            let error: Error = btn.connect(StringName::from("pressed"), callable);
+
+            if error != Error::OK
+            {
+                godot_print!("Could not connect signal to button, error: {:?}", error);
+            }
+        }
+
+        if !self.destroy_all_button.is_none() {
+            let callable: Callable = self.base_mut().callable(StringName::from("destroy_button_pressed"));
+            let btn: &mut Gd<Button> = self.destroy_all_button.as_mut().unwrap();
             let error: Error = btn.connect(StringName::from("pressed"), callable);
 
             if error != Error::OK
@@ -59,41 +79,52 @@ impl IVBoxContainer for MainToolWindow
 
         self.assign_data(&save_data.unwrap());
     }
-
-    fn exit_tree(&mut self) {
-        let save_data: MultiClientData = self.retrieve_data();
-        MultiClientDataSaver::save_data(&save_data);
-    }
 }
 
 #[godot_api]
 impl MainToolWindow
 {
     #[func]
-    pub fn connect_button_pressed(&mut self)
-    {
-        self.client_runner.run_process();
+    pub fn connect_button_pressed(&mut self) {
+        let clients_to_run: i64;
+        {
+            if let Some(num_line_edit) = self.clients_line.as_ref() {
+                clients_to_run = num_line_edit.bind().get_value_as_int();
+            } 
+            else { 
+                clients_to_run = 0 ;
+            } 
+        }
+        
+        if clients_to_run == 0 {
+            return;
+        }
+
+        for _ in 0..clients_to_run { 
+            self.client_runner.run_process();   
+        }
+    }
+    
+    #[func]
+    pub fn destroy_button_pressed(&mut self) {
+        self.client_runner.kill_all_process_collection();
     }
 }
 
 impl MainToolWindow
 {
-    pub fn assign_data(&mut self, data: &MultiClientData)
-    {
-        if let Some(mut cmd_line) = self.cmd_line.as_mut()
-        {
+    pub fn assign_data(&mut self, data: &MultiClientData) {
+        if let Some(cmd_line) = self.cmd_line.as_mut() {
             let text: GString = data.cmd_line_text();
             cmd_line.set_text(text);
         }
 
-        if let Some(mut clients_count_line_edit) = self.clients_line.as_mut()
-        {
+        if let Some(clients_count_line_edit) = self.clients_line.as_mut() {
             let clients_count: i64 = data.clients_count;
             clients_count_line_edit.set_text(GString::from(clients_count.to_string()));
         }
 
-        if let Some(mut run_from_main_checkbox) = self.run_from_main_checkbox.as_mut()
-        {
+        if let Some(run_from_main_checkbox) = self.run_from_main_checkbox.as_mut() {
             let run_from_main: bool = data.run_from_main;
             run_from_main_checkbox.set_pressed(run_from_main);
         }
@@ -103,13 +134,11 @@ impl MainToolWindow
     {
         let mut data = MultiClientData::default();
 
-        if let Some(mut cmd_line) = self.cmd_line.as_mut()
-        {
+        if let Some(cmd_line) = self.cmd_line.as_mut() {
             data.assign_cmd_line_text(cmd_line.get_text())
         }
 
-        if let Some(mut clients_count_line_edit) = self.clients_line.as_mut()
-        {
+        if let Some(clients_count_line_edit) = self.clients_line.as_mut() {
             let clients: Result<i64, ParseIntError> = String::from(clients_count_line_edit.get_text().to_string()).parse();
 
             if let Ok(parsed_clients) = clients
@@ -118,8 +147,7 @@ impl MainToolWindow
             }
         }
 
-        if let Some(mut run_from_main_checkbox) = self.run_from_main_checkbox.as_mut()
-        {
+        if let Some(run_from_main_checkbox) = self.run_from_main_checkbox.as_mut() {
             data.run_from_main = run_from_main_checkbox.is_pressed();
         }
 

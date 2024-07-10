@@ -2,9 +2,7 @@ use godot::prelude::*;
 use godot::classes::{ILineEdit, LineEdit, RegEx, RegExMatch};
 use godot::global::Error;
 use std::any::type_name;
-use std::num::ParseIntError;
 use godot::obj::BaseMut;
-use serde::__private::de::Content::I64;
 
 #[derive(GodotClass)]
 #[class(base=LineEdit)]

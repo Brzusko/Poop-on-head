@@ -1,10 +1,11 @@
 [gd_scene format=3 uid="uid://c5fnuuvbcns1b"]
 
-[node name="ToolWindow" type="MainToolWindow" node_paths=PackedStringArray("cmd_line", "clients_line", "run_from_main_checkbox", "run_game_button")]
+[node name="ToolWindow" type="MainToolWindow" node_paths=PackedStringArray("cmd_line", "clients_line", "run_from_main_checkbox", "run_game_button", "destroy_all_button")]
 cmd_line = NodePath("ContentContainer/CMDContainer/LineEdit")
 clients_line = NodePath("ContentContainer/ClientsCount/NumericLineEdit")
 run_from_main_checkbox = NodePath("ContentContainer/RunFromMain/CheckBox")
 run_game_button = NodePath("ContentContainer/ConnectButton")
+destroy_all_button = NodePath("ContentContainer/DestroyButton")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -51,3 +52,7 @@ size_flags_vertical = 3
 [node name="ConnectButton" type="Button" parent="ContentContainer"]
 layout_mode = 2
 text = "Create Clients"
+
+[node name="DestroyButton" type="Button" parent="ContentContainer"]
+layout_mode = 2
+text = "Destroy Clients"
