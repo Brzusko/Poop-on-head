@@ -4,6 +4,7 @@ use godot::classes::{VBoxContainer, IVBoxContainer, CheckBox, LineEdit, Button};
 use godot::global::Error;
 use crate::multi_client_data::{MultiClientData, MultiClientDataSaver};
 use crate::client_runner::{ClientRunner};
+use crate::numeric_line_edit::{NumericLineEdit};
 
 #[derive(GodotClass)]
 #[class(base=VBoxContainer)]
@@ -13,7 +14,7 @@ struct MainToolWindow
     #[export]
     cmd_line: Option<Gd<LineEdit>>,
     #[export]
-    clients_line: Option<Gd<LineEdit>>,
+    clients_line: Option<Gd<NumericLineEdit>>,
     #[export]
     run_from_main_checkbox: Option<Gd<CheckBox>>,
     #[export]

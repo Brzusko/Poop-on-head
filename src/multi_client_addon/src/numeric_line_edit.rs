@@ -2,11 +2,13 @@ use godot::prelude::*;
 use godot::classes::{ILineEdit, LineEdit, RegEx, RegExMatch};
 use godot::global::Error;
 use std::any::type_name;
+use std::num::ParseIntError;
 use godot::obj::BaseMut;
+use serde::__private::de::Content::I64;
 
 #[derive(GodotClass)]
 #[class(base=LineEdit)]
-struct NumericLineEdit
+pub struct NumericLineEdit
 {
     base: Base<LineEdit>,
     reg_ex: Gd<RegEx>,
@@ -59,5 +61,18 @@ impl NumericLineEdit {
         let caret_pos:i32 = base_api.get_caret_column();
         base_api.set_text(value_cache);
         base_api.set_caret_column(caret_pos);
+    }
+    
+    pub fn get_value_as_int(&self) -> i64 {
+        let value = self.base().get_text();
+        if value.is_empty() {
+            return 0;
+        }
+        let value_as_rust_string = value.to_string();
+        let parsed_value = value_as_rust_string.parse::<i64>();
+        match parsed_value {
+            Ok(val) => { val }
+            Err(_) => { 0 }
+        }
     }
 }
