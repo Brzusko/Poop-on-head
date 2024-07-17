@@ -4,11 +4,11 @@ compatibility_minimum = 4.2
 reloadable = true
 
 [libraries]
-linux.debug.x86_64 =     "res://src/multi_client_addon/target/debug/libmulti_client_addon.so"
-linux.release.x86_64 =   "res://src/multi_client_addon/target/release/libmulti_client_addon.so"
-windows.debug.x86_64 =   "res://src/multi_client_addon/target/debug/multi_client_addon.dll"
-windows.release.x86_64 = "res://src/multi_client_addon/target/release/multi_client_addon.dll"
-macos.debug =            "res://src/multi_client_addon/target/debug/libmulti_client_addon.dylib"
-macos.release =          "res://src/multi_client_addon/target/release/libmulti_client_addon.dylib"
-macos.debug.arm64 =      "res://src/multi_client_addon/target/debug/libmulti_client_addon.dylib"
-macos.release.arm64 =    "res://src/multi_client_addon/target/release/libmulti_client_addon.dylib"
+linux.debug.x86_64 =     "res://src/target/debug/libmulti_client_addon.so"
+linux.release.x86_64 =   "res://src/target/release/libmulti_client_addon.so"
+windows.debug.x86_64 =   "res://src/target/debug/multi_client_addon.dll"
+windows.release.x86_64 = "res://src/target/release/multi_client_addon.dll"
+macos.debug =            "res://src/target/debug/libmulti_client_addon.dylib"
+macos.release =          "res://src/target/release/libmulti_client_addon.dylib"
+macos.debug.arm64 =      "res://src/target/debug/libmulti_client_addon.dylib"
+macos.release.arm64 =    "res://src/target/release/libmulti_client_addon.dylib"
