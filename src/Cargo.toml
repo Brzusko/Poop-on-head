@@ -1,0 +1,6 @@
+[workspace]
+
+members = [
+    "multi_client_addon",
+    "poop_on_head"
+]
