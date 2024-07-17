@@ -47,7 +47,6 @@ impl IVBoxContainer for MainToolWindow
     }
 
     fn ready(&mut self) {
-        godot_print!("Kuytwa");
         if !self.run_game_button.is_none()
         {
             let callable: Callable = self.base_mut().callable(StringName::from("connect_button_pressed"));
